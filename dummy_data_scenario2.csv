@@ -1,0 +1,28 @@
+Task_ID,Task_Name,Duration_Days,Resource_Name,Cost_Per_Day,Predecessors,Risk_Level
+1,Market Research & Analysis,8,Sarah Chen,850,,High
+2,Business Case Development,6,Michael Brown,900,,Med
+3,Stakeholder Approval Process,4,Sarah Chen,850,"1,2",Low
+4,Technical Feasibility Study,12,David Rodriguez,780,1,High
+5,Resource Planning & Budgeting,7,Jennifer Lee,820,"2,3",Med
+6,Cloud Infrastructure Setup,15,David Rodriguez,780,4,High
+7,DevOps Pipeline Configuration,10,Tom Anderson,740,6,Med
+8,Microservices Architecture Design,14,David Rodriguez,780,4,High
+9,Data Migration Strategy,9,Lisa Wang,700,4,High
+10,Legacy System Integration,18,Tom Anderson,740,"6,8",High
+11,Real-time Analytics Module,16,Lisa Wang,700,8,High
+12,Machine Learning Model Training,20,Alex Kumar,950,9,High
+13,Mobile App Development - iOS,22,Jessica Martinez,820,"8,11",Med
+14,Mobile App Development - Android,22,Carlos Santos,800,"8,11",Med
+15,Push Notification Service,8,Tom Anderson,740,10,Low
+16,Third-party API Integrations,11,Alex Kumar,950,10,Med
+17,Data Encryption Implementation,9,David Rodriguez,780,9,High
+18,Load Balancing & Scaling,7,Tom Anderson,740,6,Med
+19,Automated Testing Framework,13,Jennifer Lee,820,"12,16",Med
+20,Cross-platform Compatibility Testing,10,Jessica Martinez,820,"13,14",Med
+21,Penetration Testing & Security Review,8,David Rodriguez,780,17,High
+22,Performance Optimization,12,Lisa Wang,700,"18,19",High
+23,Beta Testing Program,15,Sarah Chen,850,"20,21",Med
+24,Customer Feedback Integration,9,Michael Brown,900,23,Med
+25,Final Integration Testing,11,Jennifer Lee,820,"22,24",High
+26,Production Deployment,6,Tom Anderson,740,25,High
+27,Post-launch Monitoring & Support,14,Sarah Chen,850,26,Med
