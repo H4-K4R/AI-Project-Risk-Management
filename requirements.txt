@@ -1,9 +1,11 @@
 # AI-Powered Project Risk & Resource Management Agent
-# Core Dependencies
+# Core Dependencies for AutoGen Multi-Agent System
 
-# CrewAI for Multi-Agent System
-crewai==0.28.8
-crewai-tools==0.1.6
+# Multi-Agent System (Microsoft AutoGen)
+pyautogen==0.2.16
+
+# OpenAI SDK for HuggingFace API
+openai>=1.13.3
 
 # Streamlit for Interactive Dashboard
 streamlit==1.29.0
@@ -15,14 +17,19 @@ numpy==1.26.2
 # Visualization
 plotly==5.18.0
 
-# Optimization
+# Optimization (Linear Programming)
 pulp==2.7.0
-
-# Language Model Support
-langchain>=0.1.10
-langchain-openai>=0.0.2
-openai>=1.13.3
 
 # Utilities
 python-dotenv==1.0.0
 requests==2.32.3
+
+# API Framework (Optional)
+fastapi==0.109.0
+uvicorn==0.27.0
+python-multipart==0.0.6
+
+# Testing & Coverage
+pytest==7.4.3
+pytest-cov==4.1.0
+pytest-mock==3.12.0
