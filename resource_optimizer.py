@@ -38,7 +38,7 @@ class ResourceOptimizer:
         Returns:
             Dictionary with optimization results and recommendations
         """
-        # Calculate baseline duration
+        # Calculate baseline duration (original max workload)
         baseline_duration = self._calculate_baseline_duration()
        
         # Create optimization model
@@ -50,6 +50,9 @@ class ResourceOptimizer:
             for r in self.resources:
                 x[(t, r)] = LpVariable(f"assign_{t}_{r}", cat='Binary')
        
+        # Makespan variable: represents the project completion time (critical path)
+        makespan = LpVariable("makespan", lowBound=0)
+       
         # Task durations (can vary by resource skill)
         task_durations = {}
         for idx, row in self.df.iterrows():
@@ -60,18 +63,23 @@ class ResourceOptimizer:
                 task_durations[(task_id, r)] = duration
        
         # Objective: Minimize makespan (project completion time)
-        # We use total weighted duration as proxy
-        prob += lpSum([x[(t, r)] * task_durations[(t, r)]
-                      for t in self.tasks for r in self.resources])
+        prob += makespan, "Minimize_Project_Makespan"
        
         # Constraint 1: Each task must be assigned to exactly one resource
         for t in self.tasks:
-            prob += lpSum([x[(t, r)] for r in self.resources]) == 1
+            prob += lpSum([x[(t, r)] for r in self.resources]) == 1, f"Task_{t}_Assignment"
        
-        # Constraint 2: Resource capacity (max tasks per resource)
+        # Constraint 2: Makespan must be >= workload of each resource
+        for r in self.resources:
+            prob += (
+                makespan >= lpSum([x[(t, r)] * task_durations[(t, r)] for t in self.tasks]),
+                f"Makespan_{r}"
+            )
+       
+        # Constraint 3: Resource capacity (max tasks per resource)
         max_tasks_per_resource = len(self.tasks) // len(self.resources) + 2
         for r in self.resources:
-            prob += lpSum([x[(t, r)] for t in self.tasks]) <= max_tasks_per_resource
+            prob += lpSum([x[(t, r)] for t in self.tasks]) <= max_tasks_per_resource, f"Capacity_{r}"
        
         # Solve the problem
         prob.solve()
@@ -86,15 +94,16 @@ class ResourceOptimizer:
             'status': 'success' if LpStatus[prob.status] == 'Optimal' else 'suboptimal',
             'baseline_duration': baseline_duration,
             'optimized_duration': optimized_duration,
-            'improvement_percentage': max(improvement, 0),  # At least 0%
+            'improvement_percentage': improvement,  # Can be negative if worse
             'optimized_allocation': optimized_allocation,
             'recommendations': self._generate_recommendations(optimized_allocation, improvement)
         }
    
     def _calculate_baseline_duration(self) -> float:
-        """Calculate baseline project duration from current allocation."""
-        # Sum of all task durations (assuming sequential execution)
-        return self.df['Duration_Days'].sum()
+        """Calculate baseline project duration from current allocation (max workload)."""
+        # Calculate max resource workload in original allocation (realistic baseline)
+        resource_workload = self.df.groupby('Resource_Name')['Duration_Days'].sum()
+        return resource_workload.max()
    
     def _extract_solution(self, x: Dict) -> List[Dict]:
         """Extract task-resource assignments from optimization solution."""
@@ -138,12 +147,21 @@ class ResourceOptimizer:
                 resource_tasks[r] = []
             resource_tasks[r].append(item)
        
+        # Calculate baseline and optimized durations for display
+        baseline_duration = self._calculate_baseline_duration()
+        optimized_duration = max(sum(t['duration'] for t in tasks) for tasks in resource_tasks.values()) if resource_tasks else 0
+       
         recommendations = f"""
 OPTIMIZATION RECOMMENDATIONS
 ═══════════════════════════════════════════════════════════════
  
 🎯 PERFORMANCE IMPROVEMENT: {improvement:.1f}%
-{'✅ TARGET MET (≥10% improvement)' if improvement >= 10 else '⚠️  Below 10% target - consider additional optimizations'}
+{'✅ SUCCESSFUL OPTIMIZATION' if improvement > 0 else '⚠️  NO IMPROVEMENT - Original allocation is already optimal or better'}
+{'✅ Meets 10% target' if improvement >= 10 else ''}
+ 
+📊 DURATION COMPARISON:
+  Original Critical Path: {baseline_duration} days
+  Optimized Critical Path: {optimized_duration} days (longest resource)
  
 📋 OPTIMIZED RESOURCE ALLOCATION:
 """
@@ -161,17 +179,22 @@ OPTIMIZATION RECOMMENDATIONS
        
         recommendations += f"""
 💡 KEY ACTIONS:
-  1. Rebalance workload according to optimized allocation
-  2. Prioritize critical path tasks (longest resource workload)
-  3. Consider hiring additional resources if improvement < 10%
-  4. Monitor resource utilization during execution
-  5. Implement parallel task execution where possible
+  {'1. Implement the optimized allocation to reduce project duration' if improvement > 0 else '1. Keep current allocation - it is already optimal'}
+  2. Monitor critical path (longest resource workload) during execution
+  3. Rebalance if new tasks are added or durations change
+  4. Consider hiring if all resources are at capacity
+  5. Implement parallel task execution where dependencies allow
  
 📊 OPTIMIZATION DETAILS:
-  - Algorithm: Linear Programming (PuLP)
-  - Objective: Minimize project makespan
-  - Constraints: Task-resource assignment, capacity limits
-  - Status: {'✅ Optimal solution found' if improvement > 0 else '⚠️  Suboptimal solution'}
+  - Algorithm: Linear Programming with Makespan Minimization (PuLP)
+  - Objective: Minimize project critical path (longest resource workload)
+  - Constraints: Task-resource assignment, capacity limits, makespan constraints
+  - Status: {'✅ Optimal solution found' if improvement >= 0 else '⚠️  Suboptimal solution'}
+ 
+⚠️  IMPORTANT NOTES:
+  - This optimization ignores task dependencies (assumes all can run in parallel)
+  - Actual project duration may be longer due to dependency chains
+  - Consider critical path method (CPM) for dependency-aware scheduling
 """
        
         return recommendations
