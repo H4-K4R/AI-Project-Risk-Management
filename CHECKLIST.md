@@ -9,15 +9,16 @@
 - [ ] Wait for setup to complete (3-5 minutes)
 
 ### Phase 2: API Configuration
-- [ ] Get OpenAI API key from https://platform.openai.com/api-keys
+- [ ] Get HuggingFace API token from https://huggingface.co/settings/tokens
 - [ ] Open `.env` file in text editor
-- [ ] Replace `your_openai_api_key_here` with your actual key
+- [ ] Replace `your_hf_token_here` with your actual token
 - [ ] Save `.env` file
 
 ### Phase 3: Verification
 - [ ] Activate virtual environment: `.\venv\Scripts\Activate.ps1`
-- [ ] Run tests: `python test_system.py`
-- [ ] Verify all tests pass (6/6)
+- [ ] Run tests: `pytest tests/ --cov`
+- [ ] Verify coverage is 90%+ across 5 modules
+- [ ] Verify all tests pass (100+ tests)
 
 ---
 
@@ -27,8 +28,8 @@
 - [ ] Open PowerShell
 - [ ] Navigate to project folder
 - [ ] Activate venv: `.\venv\Scripts\Activate.ps1`
-- [ ] Launch app: `streamlit run app.py`
-- [ ] Wait for browser to open automatically
+- [ ] Launch app: `streamlit run Scripts/app.py`
+- [ ] Wait for browser to open automatically at http://localhost:8501
 
 ---
 
@@ -64,8 +65,9 @@
 
 ### 2. Technical Prep
 - [ ] Test application runs smoothly
-- [ ] Have `dummy_data.csv` ready
-- [ ] Keep `agents.py` open to show code
+- [ ] Have `dummy_data.csv` and `dummy_data_scenario2.csv` ready
+- [ ] Keep `agents_autogen.py`, `resource_optimizer.py`, and `risk_simulator.py` open to show code
+- [ ] Have DEMO_SPEECH.md open for reference
 - [ ] Test on presentation computer/screen
 
 ### 3. Demo Rehearsal
