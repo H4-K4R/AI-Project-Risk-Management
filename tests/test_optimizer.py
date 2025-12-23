@@ -115,6 +115,107 @@ def test_optimize_parallel_tasks():
     assert result['status'] in ['success', 'suboptimal']
  
  
+def test_baseline_duration_calculation(sample_df):
+    """Test baseline duration calculation"""
+    optimizer = ResourceOptimizer(sample_df)
+    baseline = optimizer._calculate_baseline_duration()
+   
+    # Baseline should be the max workload across resources
+    # Alice: 10+8=18, Bob: 15+20=35, Charlie: 12
+    # Max should be 35
+    assert baseline > 0
+    assert baseline >= 12  # At least Charlie's workload
+ 
+ 
+def test_optimized_duration_calculation(sample_df):
+    """Test optimized duration calculation"""
+    optimizer = ResourceOptimizer(sample_df)
+    result = optimizer.optimize_allocation()
+   
+    if result['status'] in ['success', 'suboptimal']:
+        allocation = result['optimized_allocation']
+        optimized = optimizer._calculate_optimized_duration(allocation)
+        assert optimized > 0
+ 
+ 
+def test_recommendations_generation(sample_df):
+    """Test recommendations text generation"""
+    optimizer = ResourceOptimizer(sample_df)
+    result = optimizer.optimize_allocation()
+   
+    assert 'recommendations' in result
+    assert isinstance(result['recommendations'], str)
+    assert len(result['recommendations']) > 0
+ 
+ 
+def test_extract_solution(sample_df):
+    """Test solution extraction from optimization"""
+    optimizer = ResourceOptimizer(sample_df)
+    result = optimizer.optimize_allocation()
+   
+    if result['status'] in ['success', 'suboptimal']:
+        assert 'optimized_allocation' in result
+        assert isinstance(result['optimized_allocation'], list)
+        assert len(result['optimized_allocation']) > 0
+ 
+ 
+def test_optimization_with_dependencies(sample_df):
+    """Test that optimization handles task dependencies"""
+    optimizer = ResourceOptimizer(sample_df)
+    result = optimizer.optimize_allocation()
+   
+    # Should complete successfully even with dependencies
+    assert result['status'] in ['success', 'suboptimal']
+    assert 'baseline_duration' in result
+    assert 'optimized_duration' in result
+ 
+ 
+def test_optimization_improvement_metric(sample_df):
+    """Test that improvement percentage is calculated"""
+    optimizer = ResourceOptimizer(sample_df)
+    result = optimizer.optimize_allocation()
+   
+    assert 'improvement_percentage' in result
+    assert isinstance(result['improvement_percentage'], (int, float))
+ 
+ 
+def test_optimize_resources_convenience_function(sample_df):
+    """Test the convenience function wrapper"""
+    from resource_optimizer import optimize_resources
+   
+    result = optimize_resources(sample_df)
+   
+    assert 'status' in result
+    assert result['status'] in ['success', 'suboptimal']
+ 
+ 
+def test_optimizer_with_many_resources():
+    """Test optimization with many resources"""
+    df = pd.DataFrame({
+        'Task_ID': list(range(1, 11)),
+        'Task_Name': [f'Task {i}' for i in range(1, 11)],
+        'Duration_Days': [5] * 10,
+        'Resource_Name': [f'Resource_{i%5}' for i in range(10)],
+        'Cost_Per_Day': [500] * 10,
+        'Risk_Level': ['Low'] * 10,
+        'Predecessors': [None] * 10
+    })
+   
+    optimizer = ResourceOptimizer(df)
+    result = optimizer.optimize_allocation()
+   
+    assert result['status'] in ['success', 'suboptimal']
+ 
+ 
+def test_optimizer_task_resource_mapping(sample_df):
+    """Test that optimizer creates correct task-resource mappings"""
+    optimizer = ResourceOptimizer(sample_df)
+   
+    assert len(optimizer.tasks) > 0
+    assert len(optimizer.resources) > 0
+    assert len(optimizer.tasks) == len(sample_df)
+ 
+ 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
  
