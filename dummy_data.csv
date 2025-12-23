@@ -1,0 +1,22 @@
+Task_ID,Task_Name,Duration_Days,Resource_Name,Cost_Per_Day,Predecessors,Risk_Level
+1,Project Initiation & Planning,5,Alice Johnson,800,,Low
+2,Requirements Gathering,7,Bob Smith,750,,Med
+3,System Architecture Design,10,Alice Johnson,800,"1,2",High
+4,Database Schema Design,6,Charlie Davis,700,2,Med
+5,Frontend Development - UI Components,15,Diana Martinez,650,3,Low
+6,Backend API Development,20,Bob Smith,750,"3,4",High
+7,Authentication Module,8,Eve Wilson,720,6,Med
+8,Payment Gateway Integration,12,Charlie Davis,700,6,High
+9,User Dashboard Implementation,10,Diana Martinez,650,5,Low
+10,Admin Panel Development,14,Frank Brown,680,"5,7",Med
+11,Database Optimization,5,Charlie Davis,700,4,Low
+12,API Testing & Documentation,8,Grace Lee,600,6,Med
+13,Security Audit,6,Eve Wilson,720,"7,8",High
+14,Performance Testing,7,Grace Lee,600,"11,12",Med
+15,User Acceptance Testing,10,Bob Smith,750,"9,10,13",Med
+16,Bug Fixes & Refinements,12,Diana Martinez,650,15,High
+17,Deployment Setup - Staging,4,Frank Brown,680,14,Low
+18,Deployment Setup - Production,5,Frank Brown,680,17,Med
+19,User Training & Documentation,8,Grace Lee,600,15,Low
+20,Final Quality Assurance,6,Alice Johnson,800,"16,18",High
+21,Go-Live & Monitoring,3,Alice Johnson,800,20,Med

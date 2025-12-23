@@ -1,0 +1,28 @@
+# AI-Powered Project Risk & Resource Management Agent
+# Core Dependencies
+
+# CrewAI for Multi-Agent System
+crewai==0.28.8
+crewai-tools==0.1.6
+
+# Streamlit for Interactive Dashboard
+streamlit==1.29.0
+
+# Data Processing
+pandas==2.1.4
+numpy==1.26.2
+
+# Visualization
+plotly==5.18.0
+
+# Optimization
+pulp==2.7.0
+
+# Language Model Support
+langchain>=0.1.10
+langchain-openai>=0.0.2
+openai>=1.13.3
+
+# Utilities
+python-dotenv==1.0.0
+requests==2.32.3

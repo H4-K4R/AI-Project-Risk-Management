@@ -1,0 +1,59 @@
+[tool.pytest.ini_options]
+
+minversion = "7.0"
+
+testpaths = ["tests"]
+
+python_files = ["test_*.py"]
+
+python_classes = ["Test*"]
+
+python_functions = ["test_*"]
+
+addopts = "-v --cov=agents_simple --cov=resource_optimizer --cov=risk_simulator --cov-report=html --cov-report=term-missing --cov-fail-under=70"
+ 
+[tool.coverage.run]
+
+source = ["."]
+
+omit = [
+
+    "tests/*",
+
+    "setup.py",
+
+    "*/__pycache__/*",
+
+    "*/venv/*",
+
+    "*/env/*",
+
+    "agents.py",
+
+    "test_system.py",
+
+    "app.py",
+
+]
+ 
+[tool.coverage.report]
+
+exclude_lines = [
+
+    "pragma: no cover",
+
+    "def __repr__",
+
+    "raise AssertionError",
+
+    "raise NotImplementedError",
+
+    "if __name__ == .__main__.:",
+
+    "if TYPE_CHECKING:",
+
+    "@abstractmethod",
+
+]
+
+ 
