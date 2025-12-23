@@ -12,14 +12,38 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, Dict, Any
 import pandas as pd
+import numpy as np
 import tempfile
 import os
+import json
 from datetime import datetime
  
 # Import analysis modules
 from agents_simple import analyze_project, calculate_project_metrics
 from resource_optimizer import optimize_resources
 from risk_simulator import simulate_project_risk
+ 
+ 
+def convert_to_serializable(obj):
+    """Convert numpy/pandas types to JSON-serializable Python types."""
+    if isinstance(obj, np.integer):
+        return int(obj)
+    elif isinstance(obj, np.floating):
+        return float(obj)
+    elif isinstance(obj, np.ndarray):
+        return obj.tolist()
+    elif isinstance(obj, pd.Series):
+        return obj.tolist()
+    elif isinstance(obj, pd.DataFrame):
+        return obj.to_dict(orient='records')
+    elif isinstance(obj, dict):
+        return {key: convert_to_serializable(value) for key, value in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_to_serializable(item) for item in obj]
+    elif isinstance(obj, tuple):
+        return tuple(convert_to_serializable(item) for item in obj)
+    else:
+        return obj
  
  
 app = FastAPI(
@@ -138,17 +162,22 @@ async def analyze_project_endpoint(
             optimization_result = None
             if enable_optimization:
                 optimization_result = optimize_resources(df)
+                optimization_result = convert_to_serializable(optimization_result)
            
             # Optional: Monte Carlo simulation
             simulation_result = None
             if enable_simulation:
                 simulation_result = simulate_project_risk(df, num_simulations)
+                simulation_result = convert_to_serializable(simulation_result)
+           
+            # Convert all results to JSON-serializable format
+            metrics = convert_to_serializable(analysis_result.get('metrics'))
            
             return AnalysisResponse(
                 status=analysis_result['status'],
                 timestamp=analysis_result['timestamp'],
                 analysis_results=analysis_result.get('analysis_results'),
-                metrics=analysis_result.get('metrics'),
+                metrics=metrics,
                 optimization=optimization_result,
                 simulation=simulation_result
             )
@@ -187,6 +216,7 @@ async def optimize_endpoint(file: UploadFile = File(...)):
         try:
             df = pd.read_csv(tmp_path)
             result = optimize_resources(df)
+            result = convert_to_serializable(result)
             return JSONResponse(content=result)
         finally:
             os.unlink(tmp_path)
@@ -231,6 +261,7 @@ async def simulate_endpoint(
         try:
             df = pd.read_csv(tmp_path)
             result = simulate_project_risk(df, num_simulations)
+            result = convert_to_serializable(result)
             return JSONResponse(content=result)
         finally:
             os.unlink(tmp_path)
