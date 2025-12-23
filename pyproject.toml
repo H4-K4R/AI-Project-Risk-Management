@@ -10,8 +10,9 @@ python_classes = ["Test*"]
 
 python_functions = ["test_*"]
 
-addopts = "-v --cov=agents_simple --cov=resource_optimizer --cov=risk_simulator --cov-report=html --cov-report=term-missing --cov-fail-under=70"
- 
+addopts = "-v --cov=agents_simple --cov=agents_autogen --cov=resource_optimizer --cov=risk_simulator --cov=llm_client --cov-report=html --cov-report=term-missing --cov-fail-under=90"
+
+  
 [tool.coverage.run]
 
 source = ["."]
