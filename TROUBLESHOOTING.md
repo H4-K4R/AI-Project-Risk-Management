@@ -55,7 +55,7 @@ pip install pandas plotly
 
 ## API and Configuration Issues
 
-### Issue 4: "OpenAI API Error / Invalid API Key"
+### Issue 4: "HuggingFace API Error / Invalid API Key"
 **Symptoms:** Analysis fails with API key error
 
 **Solutions:**
@@ -66,18 +66,20 @@ pip install pandas plotly
    ```
 
 2. **Verify API key format:**
-   - Should start with `sk-proj-` or `sk-`
+   - Should start with `hf_`
    - No quotes around the key
    - No extra spaces
+   - Get token from: https://huggingface.co/settings/tokens
 
    **Correct:**
    ```env
-   OPENAI_API_KEY=sk-proj-abc123def456...
+   HF_API_TOKEN=hf_abc123def456...
+   HF_MODEL=moonshotai/Kimi-K2-Instruct-0905
    ```
 
    **Incorrect:**
    ```env
-   OPENAI_API_KEY="sk-proj-abc123def456..."  # Remove quotes
+   HF_API_TOKEN="hf_abc123def456..."  # Remove quotes
    OPENAI_API_KEY= sk-proj-abc123def456...   # Remove space
    ```
 
