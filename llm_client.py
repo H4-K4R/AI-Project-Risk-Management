@@ -18,7 +18,7 @@ class LLMClient:
     def __init__(self, model: Optional[str] = None, timeout: int = 60):
         self.api_token = os.getenv("HF_API_TOKEN")
         # Use provided model, or HF_MODEL env var, or default to a free model
-        self.model = model or os.getenv("HF_MODEL") or "mistralai/Mistral-7B-Instruct-v0.3"
+        self.model = model or os.getenv("HF_MODEL") or "meta-llama/Meta-Llama-3-8B-Instruct"
         self.timeout = timeout
        
         # Create OpenAI client pointing to HuggingFace
