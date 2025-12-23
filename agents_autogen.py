@@ -32,7 +32,7 @@ class ProjectManagementAgents:
         self.llm_config = {
             "config_list": [
                 {
-                    "model": os.getenv("HF_MODEL", "moonshotai/Kimi-K2-Instruct-0905"),
+                    "model": os.getenv("HF_MODEL", "meta-llama/Meta-Llama-3-8B-Instruct"),
                     "base_url": "https://router.huggingface.co/v1",
                     "api_key": os.getenv("HF_API_TOKEN"),
                     "temperature": 0.3,
@@ -332,7 +332,7 @@ The multi-agent system could not complete the analysis.
 Please check:
 1. HF_API_TOKEN is set in .env
 2. HuggingFace API is accessible
-3. Model is available (current: moonshotai/Kimi-K2-Instruct-0905)
+3. Model is available (current: meta-llama/Meta-Llama-3-8B-Instruct)
 """
  
  
