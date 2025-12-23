@@ -5,49 +5,111 @@
 ```
 Advanced_Programming/
 │
-├── 📄 agents.py                    # Multi-Agent System (CrewAI)
-├── 📄 app.py                       # Streamlit Dashboard
-├── 📄 requirements.txt             # Python Dependencies
-├── 📄 dummy_data.csv              # Sample Project Data
+├── Scripts/                        # Core Application Modules
+│   ├── __init__.py                # Package initializer
+│   ├── agents_simple.py           # Hybrid agent system & metrics
+│   ├── agents_autogen.py          # AutoGen multi-agent framework
+│   ├── resource_optimizer.py     # PuLP linear programming
+│   ├── risk_simulator.py         # Monte Carlo simulation
+│   ├── llm_client.py             # HuggingFace LLM client
+│   ├── app.py                    # Streamlit dashboard
+│   └── api.py                    # FastAPI endpoints (optional)
 │
-├── 📄 README.md                    # Main Documentation
-├── 📄 QUICKSTART.md               # Quick Start Guide
-├── 📄 PRESENTATION_GUIDE.md       # Presentation Script
-├── 📄 TROUBLESHOOTING.md          # Problem Solving
+├── tests/                         # Test Suite (90%+ coverage)
+│   ├── __init__.py
+│   ├── test_agents.py            # agents_simple tests
+│   ├── test_agents_extended.py   # Extended agent tests
+│   ├── test_agents_autogen.py    # AutoGen tests
+│   ├── test_llm_client.py        # LLM client tests
+│   ├── test_optimizer.py         # Optimization tests
+│   ├── test_simulator.py         # Monte Carlo tests
+│   └── MarkdownFiles/            # Documentation
+│       ├── CHECKLIST.md
+│       ├── PRESENTATION_GUIDE.md
+│       ├── PROJECT_STRUCTURE.md
+│       ├── QUICKSTART.md
+│       └── TROUBLESHOOTING.md
 │
-├── 📄 setup.ps1                   # Automated Setup Script
-├── 📄 test_system.py              # Test Suite
-│
-├── 📄 .env.example                # Environment Template
-├── 📄 .env                        # Your API Keys (create this)
-└── 📄 .gitignore                  # Git Ignore Rules
+├── 📄 dummy_data.csv             # Sample project data
+├── 📄 dummy_data_scenario2.csv   # Alternative test data
+├── 📄 README.md                   # Main documentation
+├── 📄 DEMO_SPEECH.md             # 5-minute demo script
+├── 📄 pyproject.toml             # pytest & coverage config
+├── 📄 requirements.txt           # Python dependencies
+├── 📄 setup.ps1                  # Automated setup script
+├── 📄 .env.example               # Environment template
+└── 📄 .gitignore                 # Git ignore rules
 ```
 
 ---
 
 ## Core Application Files
 
-### 1. **agents.py** (250+ lines)
-**Purpose:** Multi-Agent AI System using CrewAI
+### 1. **agents_simple.py** (244 lines)
+**Purpose:** Hybrid agent system with deterministic metrics
 
 **Key Components:**
-- `analyze_csv_data` - Custom tool for reading project data
-- `calculate_risk_metrics` - Risk assessment tool
-- `analyze_resource_allocation` - Resource optimization tool
-- `ProjectManagementCrew` - Main orchestrator class
-- `RiskAgent` - Analyzes project risks
-- `ResourceAgent` - Optimizes resource allocation
+- `calculate_project_metrics()` - Fast metrics calculation
+- `analyze_project()` - Main entry point with AutoGen fallback
+- `build_report()` - Report generation
 
-**AI4SE Phases:** 2, 3, 7, 9, 10, 11, 12, 13, 14
+**AI4SE Phases:** 2, 3, 7, 12
 
 **Technology:**
-- CrewAI framework
-- Custom @tool decorators
 - Pandas for data analysis
-- Type hints throughout
+- AutoGen integration
+- LLMClient integration
 
-**Entry Point:** Can run standalone for testing
-```powershell
+### 2. **agents_autogen.py** (372 lines)
+**Purpose:** Multi-Agent AI System using Microsoft AutoGen
+
+**Key Components:**
+- `ProjectManagementAgents` - Main orchestrator class
+- `RiskAnalyst` - Risk analysis agent
+- `ResourceOptimizer` - Resource planning agent  
+- `DecisionSynthesizer` - Decision synthesis agent
+- `analyze_project()` - Convenience function
+
+**AI4SE Phases:** 9, 10, 11, 13, 14
+
+**Technology:**
+- Microsoft AutoGen framework
+- HuggingFace LLM via llm_client
+- System message prompts
+
+### 3. **resource_optimizer.py** (232 lines)
+**Purpose:** Linear Programming optimization with PuLP
+
+**Key Components:**
+- `ResourceOptimizer` - Main optimization class
+- `optimize_allocation()` - LP solver
+- `_calculate_baseline_duration()` - Baseline metrics
+- `_generate_recommendations()` - Action items
+
+**AI4SE Phases:** 12
+
+**Technology:**
+- PuLP (COIN-OR)
+- Simplex algorithm
+- Binary decision variables
+
+### 4. **risk_simulator.py** (246 lines)
+**Purpose:** Monte Carlo risk simulation
+
+**Key Components:**
+- `RiskSimulator` - Simulation engine
+- `run_simulation()` - 1000+ iterations
+- `SimulationResult` - Dataclass for results
+- `_assess_risk()` - Risk categorization
+
+**AI4SE Phases:** 7
+
+**Technology:**
+- NumPy for statistical simulation
+- Triangular distributions
+- Percentile calculations
+
+### 5. **llm_client.py** (60 lines)
 python agents.py
 ```
 
