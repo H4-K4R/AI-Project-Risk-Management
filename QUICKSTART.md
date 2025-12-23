@@ -9,24 +9,35 @@ cd c:\Users\sberker\Downloads\Advanced_Programming
 ```
 
 This will:
-- ✓ Check Python version
+- ✓ Check Python version (3.10+)
 - ✓ Create virtual environment
-- ✓ Install all dependencies
+- ✓ Install all dependencies (AutoGen, PuLP, Streamlit, etc.)
 - ✓ Create .env file
 
-### Step 2: Configure API Key
+### Step 2: Configure API Key (HuggingFace)
 1. Open `.env` file in a text editor
-2. Replace `your_openai_api_key_here` with your actual OpenAI API key
-3. Get a key from: https://platform.openai.com/api-keys
+2. Replace `your_hf_token_here` with your HuggingFace API token
+3. Get a free token from: https://huggingface.co/settings/tokens
 
 Example:
 ```env
-OPENAI_API_KEY=sk-proj-abc123def456...
+HF_API_TOKEN=hf_abc123def456...
+HF_MODEL=moonshotai/Kimi-K2-Instruct-0905
 ```
+
+**Models you can use (FREE):**
+- `moonshotai/Kimi-K2-Instruct-0905` (default)
+- `mistralai/Mistral-7B-Instruct-v0.3`
+- `meta-llama/Meta-Llama-3.1-8B-Instruct`
+- `google/gemma-2-9b-it`
 
 ### Step 3: Launch the Application
 ```powershell
-streamlit run app.py
+# Activate virtual environment (if not already)
+.\venv\Scripts\Activate.ps1
+
+# Run Streamlit app
+streamlit run Scripts/app.py
 ```
 
 Your browser will open automatically at `http://localhost:8501`
@@ -36,8 +47,8 @@ Your browser will open automatically at `http://localhost:8501`
 ## Using the Application (3 minutes)
 
 ### Test with Sample Data
-1. Click **"Load Sample Project Data"** button on the home screen
-2. OR upload your own CSV file using the sidebar
+1. Use the file uploader in the sidebar
+2. Upload `dummy_data.csv` or `dummy_data_scenario2.csv`
 
 ### Explore Features
 
